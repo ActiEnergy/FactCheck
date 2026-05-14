@@ -13,7 +13,7 @@ FactCheck 是一个基于 Claude Code 的 AI 调研工具，通过 Skill 协调 
 
 ## 功能
 
-5 个协作 Agent：
+5 个 Agent 协作:
 
 | Agent | 功能 |
 |-------|------|
