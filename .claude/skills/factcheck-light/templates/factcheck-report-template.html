@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}} - 信息核查报告</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f0f4f8;
+        }
+
+        /* 顶部英雄区域 */
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #1a1a2e 100%);
+            padding: 80px 20px 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, #f0f4f8);
+        }
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #93c5fd;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .hero h1 {
+            font-size: 42px;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        .hero-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        .hero-meta {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        .hero-meta-item svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        /* 主内容区域 */
+        .container {
+            max-width: 900px;
+            margin: -40px auto 40px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            padding: 50px 60px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 装饰元素 */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 30px;
+            right: 30px;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+            border-radius: 2px;
+        }
+
+        h1.page-title {
+            font-size: 28px;
+            color: #1a1a1a;
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 30px;
+            display: none;
+        }
+        h2 {
+            font-size: 22px;
+            color: #1a1a1a;
+            margin: 40px 0 20px;
+            padding-left: 16px;
+            border-left: 4px solid #3b82f6;
+            position: relative;
+        }
+        h2::before {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+            border-radius: 2px;
+        }
+        h3 {
+            font-size: 18px;
+            color: #444;
+            margin: 28px 0 16px;
+            font-weight: 600;
+        }
+        p {
+            margin: 15px 0;
+            text-align: justify;
+        }
+
+        /* 可信度图例 */
+        .credibility-legend {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 1px solid #fcd34d;
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+        }
+        .credibility-legend strong {
+            color: #92400e;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        .credibility-legend .badge {
+            margin-right: 8px;
+        }
+
+        /* 执行摘要区域 */
+        .summary {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #14b8a6, #10b981);
+            border-radius: 12px 12px 0 0;
+        }
+        .summary h2 {
+            margin-top: 0;
+            border-left: none;
+            padding-left: 16px;
+        }
+        .summary p {
+            margin: 12px 0;
+        }
+
+        /* 引用样式 */
+        .citation {
+            text-decoration: none;
+            font-weight: 600;
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+        sup .citation.credibility-high { color: #16a34a; background-color: rgba(34, 197, 94, 0.2); font-size: 0.8em; }
+        sup .citation.credibility-medium { color: #ca8a04; background-color: rgba(234, 179, 8, 0.2); font-size: 0.8em; }
+        sup .citation.credibility-low { color: #dc2626; background-color: rgba(239, 68, 68, 0.2); font-size: 0.8em; }
+
+        /* 可信度背景色 */
+        .evidence-high { background-color: rgba(34, 197, 94, 0.15); padding: 2px 6px; border-radius: 4px; }
+        .evidence-medium { background-color: rgba(234, 179, 8, 0.15); padding: 2px 6px; border-radius: 4px; }
+        .evidence-low { background-color: rgba(239, 68, 68, 0.15); padding: 2px 6px; border-radius: 4px; }
+
+        /* 证据列表 */
+        .evidence-list {
+            margin: 20px 0;
+            padding: 0;
+            list-style: none;
+        }
+        .evidence-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: #fafafa;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            transition: box-shadow 0.2s ease;
+        }
+        .evidence-list li:hover {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+        .badge-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .badge {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        .badge-high { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #065f46; border: 1px solid #6ee7b7; }
+        .badge-medium { background: linear-gradient(135deg, #fef9c3, #fef08a); color: #854d0e; border: 1px solid #fde047; }
+        .badge-low { background: linear-gradient(135deg, #fee2e2, #fecaca); color: #991b1b; border: 1px solid #fca5a5; }
+        .badge-src {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .badge-src:hover { opacity: 0.8; }
+        .badge-src a { text-decoration: none; color: inherit; }
+        .evidence-text a { text-decoration: none; color: inherit; }
+        .badge-src.credibility-high { color: #16a34a; background-color: rgba(34, 197, 94, 0.2); }
+        .badge-src.credibility-medium { color: #ca8a04; background-color: rgba(234, 179, 8, 0.2); }
+        .badge-src.credibility-low { color: #dc2626; background-color: rgba(239, 68, 68, 0.2); }
+        .evidence-text {
+            flex: 1;
+            font-size: 14px;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        /* 核心结论区域 */
+        .summary-section {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 1px solid #81c784;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin: 40px 0 30px;
+        }
+        .summary-section h2 {
+            margin-top: 0;
+            border-left: none;
+            padding-left: 16px;
+        }
+        .summary-section p {
+            margin: 12px 0;
+        }
+
+        /* 建议区域 */
+        .recommendations {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 1px solid #6ee7b7;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-top: 30px;
+        }
+        .recommendations h2 {
+            margin-top: 0;
+            border-left-color: #3b82f6;
+        }
+        .recommendations ul {
+            margin: 15px 0 15px 25px;
+        }
+        .recommendations li {
+            margin: 10px 0;
+        }
+
+        /* 参考资料 */
+        #references {
+            margin-top: 45px;
+            padding-top: 30px;
+            border-top: 1px solid #e5e7eb;
+        }
+        #references h2 {
+            margin-top: 0;
+        }
+        #references h3 {
+            color: #666;
+            font-size: 15px;
+            margin-top: 25px;
+        }
+        #references ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+        #references li {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        #references a {
+            color: #3b82f6;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        #references a:hover {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        /* 页脚 */
+        .footer {
+            max-width: 900px;
+            margin: 0 auto 40px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 13px;
+            padding: 20px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 50px 20px 70px;
+            }
+            .hero h1 {
+                font-size: 28px;
+            }
+            .hero-subtitle {
+                font-size: 15px;
+            }
+            .hero-meta {
+                gap: 15px;
+            }
+            .container {
+                margin-top: -30px;
+                padding: 30px 20px;
+                border-radius: 12px;
+            }
+            .container::before {
+                left: 15px;
+                right: 15px;
+            }
+            h2 { font-size: 18px; }
+            h3 { font-size: 16px; }
+            .evidence-list li {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部英雄区域 -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>{{TOPIC_TITLE}}</h1>
+            <p class="hero-subtitle">全面调研与可信度评估</p>
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>{{REPORT_DATE}}</span>
+                </div>
+                <div class="hero-meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>{{REPORT_CATEGORY}}</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">{{TOPIC_TITLE}}</h1>
+
+        <!-- 可信度图例 -->
+        <div class="credibility-legend">
+            <strong>可信度图例</strong>
+            <span class="badge badge-high">高可信度</span> 多源验证或官方披露，数据可靠；
+            <span class="badge badge-medium">中可信度</span> 存在不确定性或待核实；
+            <span class="badge badge-low">低可信度</span> 存在显著问题或难以证实
+        </div>
+
+        <!-- 执行摘要 -->
+        <div class="summary">
+            <h2>执行摘要</h2>
+            {{EXECUTION_SUMMARY}}
+        </div>
+
+        <!-- 主题内容区域（数量不定） -->
+        {{MAIN_CONTENT}}
+
+        <!-- 核心结论 -->
+        <div class="summary-section">
+            <h2>核心结论</h2>
+            <p style="margin: 12px 0;">基于对上述信息的全面核查与交叉验证，本报告得出以下核心结论：</p>
+            <ul style="margin: 15px 0 15px 25px;">
+                {{CORE_CONCLUSIONS}}
+            </ul>
+            <p style="margin: 12px 0;"><strong>总体可信度评估：{{OVERALL_CREDIBILITY}}</strong> — {{CREDIBILITY_REASON}}</p>
+        </div>
+
+        <!-- 信息核查说明 -->
+        <h2>{{VERIFICATION_SECTION_TITLE}}</h2>
+
+        <h3>高可信度信息</h3>
+        <ul class="evidence-list">
+            {{HIGH_CREDIBILITY_EVIDENCE}}
+        </ul>
+
+        <h3>中可信度信息（存在不确定性）</h3>
+        <ul class="evidence-list">
+            {{MEDIUM_CREDIBILITY_EVIDENCE}}
+        </ul>
+
+        <h3>低可信度信息（存在显著问题）</h3>
+        <ul class="evidence-list">
+            {{LOW_CREDIBILITY_EVIDENCE}}
+        </ul>
+
+        <!-- 使用建议 -->
+        <h2>{{RECOMMENDATIONS_SECTION_TITLE}}</h2>
+        <div class="recommendations">
+            <ul>
+                {{USAGE_RECOMMENDATIONS}}
+            </ul>
+        </div>
+
+        <!-- 参考资料 -->
+        <h2 id="references">{{REFERENCES_SECTION_TITLE}}</h2>
+        <h3>主要来源</h3>
+        <ol>
+            {{PRIMARY_SOURCES}}
+        </ol>
+        <h3>支持性证据（PosEvaluator 补充）</h3>
+        <ol>
+            {{SUPPORTING_EVIDENCE}}
+        </ol>
+        <h3>质疑性证据（NegEvaluator 补充）</h3>
+        <ol>
+            {{CHALLENGING_EVIDENCE}}
+        </ol>
+    </div>
+
+    <footer class="footer">
+        信息核查报告 · 仅供参考
+    </footer>
+</body>
+</html>
